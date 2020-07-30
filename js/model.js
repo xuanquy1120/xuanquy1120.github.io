@@ -6,6 +6,8 @@ model.listRoom = []
 model.currentRoom = undefined
 model.rooms = undefined
 var l_played = []
+model.listLocation = 0;
+
 
 model.register = (firstName, lastName, email, password) => {
     firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
@@ -78,21 +80,19 @@ model.listenGameChange=(id)=>{
         isFistRun = true
         return
       }
-    // Click(docChange.locations[docChange.locations.length - 1].pos)
-
-    if(docChange.locations[docChange.locations.length - 1].cplayer == 0)
-    {
-        
-        var path1 = "url('../Images/Opng.png')";
-    }
-    else if(docChange.locations[docChange.locations.length - 1].cplayer == 1)
-    {
-        var path1 = "url('../Images/Xpng.png')";
-    }
-    var square = document.getElementsByClassName("square");
-    square.item(docChange.locations[docChange.locations.length - 1].pos).style.backgroundImage = path1;
-    l_played.push(docChange.locations[docChange.locations.length - 1].pos)
-    // console.log(docChange.locations[0].pos)
+    Click(docChange.locations[docChange.locations.length - 1].pos)
+    // var cp=docChange.locations[docChange.locations.length - 1].cplayer 
+    // CPlayer = cp;
+    // changePlayer();
+    // var path1 = "url('../Images/Opng.png')";
+    // if(cp == 1)
+    // {
+    //      path1 = "url('../Images/Xpng.png')";
+    // }
+    // var square = document.getElementsByClassName("square");
+    // square.item(docChange.locations[docChange.locations.length - 1].pos).style.backgroundImage = path1;
+    // square.item(docChange.locations[docChange.locations.length - 1].pos).setAttribute("player",cp.toString());
+    // l_played.push(docChange.locations[docChange.locations.length - 1].pos)
     
     })
 
@@ -109,6 +109,7 @@ model.addlocation = (location) =>{
         locations: firebase.firestore.FieldValue.arrayUnion(location)
     }
     firebase.firestore().collection(model.collectionName).doc(model.currentRoom.id).update(dataToUpdate)
+    
 }
 // model.loadconversations=()=>{
 //     firebase.firestore().collection(model.collectionName).where('users','array-contains', model.currentUser.email).get().then(res=>{
@@ -122,3 +123,5 @@ model.addlocation = (location) =>{
 //       // console.log(data)
 //     })
 //   }
+
+// firebase.firestore().collection(model.collectionName).doc(model.currentRoom.id).delete()

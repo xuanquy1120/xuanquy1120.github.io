@@ -36,58 +36,54 @@ function Loaded()
 		}
 	}
 }
-
+function changePlayer()
+{
+	if (CPlayer == 0) CPlayer = 1;
+	else CPlayer = 0;
+	
+	var iplayer = "url('../Images/Opng.png')";
+	if (CPlayer == 1) iplayer = "url('../Images/Xpng.png')";
+	var imgp = document.getElementById("imgPlayer");
+	imgp.style.backgroundImage = iplayer;
+}
 //Play Game
 function Click(id)
 {
-	if (!InGame) return;
+	if (!InGame) return;	
 	var square = document.getElementsByClassName("square");
 	var pos = parseInt(id);
+	if (square.item(pos).getAttribute("player") != "-1") return;
 	var path = "url('../Images/Opng.png')";
 	if (CPlayer == 1) path = "url('../Images/Xpng.png')";
 	square.item(pos).style.backgroundImage = path;
 	square.item(pos).setAttribute("player",CPlayer.toString());
 	l_played.push(pos);
 		const location = {
+			list:model.listLocation,
 			owner: model.currentUser.email,
 			cplayer: CPlayer,
 			pos: pos,
 		  }
+	model.listLocation+=1;
 	model.addlocation(location)
-	var win = WinGame();
-	var pwin = CPlayer;	
-	if (!AI)
-	{
-		if (CPlayer == 0) CPlayer = 1;
-		else CPlayer = 0;
-		
-		var iplayer = "url('../Images/Opng.png')";
-		if (CPlayer == 1) iplayer = "url('../Images/Xpng.png')";
-		var imgp = document.getElementById("imgPlayer");
-		imgp.style.backgroundImage = iplayer;
-	}
-	else
-	{
-		if (!win)
-		{
-			AIMode();
-			win = WinGame();
-			pwin = 1;
-		}
-	}
-	
-	if (win)
-	{
-		var mess = 'Player with "X" win';
-		if (pwin == 0) mess = 'Player with "O" win';
-		alert(mess);
-		InGame = false;
-	}
-	else
-	{
-		var pgr = document.getElementById("pgrTime");
-		pgr.value = pgr.getAttribute("max");
-	}
+	var win = WinGame();	
+		  changePlayer();
+		  if (!win)
+		  {
+			  // AIMode();
+			  win = WinGame();
+			  pwin = 1;
+		  }
+	  
+		  if (win)
+		  {
+		  InGame = false;
+		  }
+		  else
+		  {
+		  var pgr = document.getElementById("pgrTime");
+		  pgr.value = pgr.getAttribute("max");
+		  }
 }
 
 // Min Max
@@ -102,21 +98,21 @@ function minab(a,b)
 	else return b;
 }
 
-function MouseOver(id)
-{
-	if (!InGame) return;
-	var square = document.getElementsByClassName("square");
-	var pos = parseInt(id);
-	square.item(pos).style.backgroundColor = "#3F3";
-}
+// function MouseOver(id)
+// {
+// 	if (!InGame) return;
+// 	var square = document.getElementsByClassName("square");
+// 	var pos = parseInt(id);
+// 	square.item(pos).style.backgroundColor = "#3F3";
+// }
 
-function MouseOut(id)
-{
-	if (!InGame) return;
-	var square = document.getElementsByClassName("square");
-	var pos = parseInt(id);
-	square.item(pos).style.backgroundColor = "#FFF";
-}
+// function MouseOut(id)
+// {
+// 	if (!InGame) return;
+// 	var square = document.getElementsByClassName("square");
+// 	var pos = parseInt(id);
+// 	square.item(pos).style.backgroundColor = "#FFF";
+// }
 
 function WinGame()
 {
@@ -211,7 +207,14 @@ function winVer(x,y,Board)
 	}
 	return false;
 }
-
+function GetBoard()
+{
+	var TBoard = [];
+	var sqr = document.getElementsByClassName("square");
+	for (i = 0; i < size*size;i++)
+		TBoard.push(parseInt(sqr.item(i).getAttribute("player")));
+	return TBoard;
+}
 function winCross1(x,y,Board)
 {
 	l_win = [];
